@@ -24,60 +24,72 @@ package org.hjson;
 /**
  * Defines options for Hjson
  */
-public class HjsonOptions {
+public class HjsonOptions{
 
-  private IHjsonDsfProvider[] dsf;
-  private boolean legacyRoot;
+    private IHjsonDsfProvider[] dsf;
+    private boolean legacyRoot;
 
-  public HjsonOptions() {
-    dsf=new IHjsonDsfProvider[0];
-    legacyRoot=true;
-  }
+    public HjsonOptions(){
+        dsf = new IHjsonDsfProvider[0];
+        legacyRoot = true;
+    }
 
-  /**
-   * Returns the DSF providers.
-   *
-   * @return providers.
-   */
-  public IHjsonDsfProvider[] getDsfProviders() { return dsf.clone(); }
+    /**
+     * Returns the DSF providers.
+     *
+     * @return providers.
+     */
+    public IHjsonDsfProvider[] getDsfProviders(){
+        return dsf.clone();
+    }
 
-  /**
-   * Sets the DSF providers.
-   *
-   * @param value value
-   */
-  public void setDsfProviders(IHjsonDsfProvider[] value) { dsf=value.clone(); }
+    /**
+     * Sets the DSF providers.
+     *
+     * @param value value
+     */
+    public void setDsfProviders(IHjsonDsfProvider[] value){
+        dsf = value.clone();
+    }
 
-  /**
-   * Detects whether objects without root braces are supported.
-   *
-   * @return <code>true</code> if this feature is enabled.
-   */
-  public boolean getParseLegacyRoot() { return legacyRoot; }
+    /**
+     * Detects whether objects without root braces are supported.
+     *
+     * @return <code>true</code> if this feature is enabled.
+     */
+    public boolean getParseLegacyRoot(){
+        return legacyRoot;
+    }
 
-  /**
-   * Sets whether root braces should be emitted.
-   *
-   * @param value value
-   */
-  public void setParseLegacyRoot(boolean value) { legacyRoot=value; }
+    /**
+     * Sets whether root braces should be emitted.
+     *
+     * @param value value
+     */
+    public void setParseLegacyRoot(boolean value){
+        legacyRoot = value;
+    }
 
-  /**
-   * Detects whether root braces should be emitted.
-   *
-   * @deprecated will always return true.
-   * @return <code>true</code> if this feature is enabled.
-   */
-  @Deprecated
-  public boolean getEmitRootBraces() { return true; }
+    /**
+     * Detects whether root braces should be emitted.
+     *
+     * @return <code>true</code> if this feature is enabled.
+     * @deprecated will always return true.
+     */
+    @Deprecated
+    public boolean getEmitRootBraces(){
+        return true;
+    }
 
-  /**
-   * Sets whether root braces should be emitted.
-   *
-   * @deprecated root braces are always emitted.
-   * @param value value
-   */
-  @Deprecated
-  public void setEmitRootBraces(boolean value) { }
+    /**
+     * Sets whether root braces should be emitted.
+     *
+     * @param value value
+     * @deprecated root braces are always emitted.
+     */
+    @Deprecated
+    public void setEmitRootBraces(boolean value){
+
+    }
 
 }

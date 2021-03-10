@@ -22,12 +22,12 @@
 package org.hjson;
 
 /** The ToString format. */
-public enum Stringify {
-  /** JSON (no whitespace). */
-  PLAIN,
-  /** Formatted JSON. */
-  FORMATTED,
-  /** Hjson. */
-  HJSON,
+public enum Stringify{
+    /** JSON (no whitespace). */
+    PLAIN,
+    /** Formatted JSON. */
+    FORMATTED,
+    /** Hjson. */
+    HJSON,
 }
 

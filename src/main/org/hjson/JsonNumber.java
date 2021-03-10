@@ -22,79 +22,71 @@
  ******************************************************************************/
 package org.hjson;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 
-
 @SuppressWarnings("serial") // use default serial UID
-class JsonNumber extends JsonValue {
+class JsonNumber extends JsonValue{
 
-  private final double value;
+    private final double value;
 
-  JsonNumber(double value) {
-    this.value=value;
-  }
-
-  @Override
-  public String toString() {
-    long l=(long)value;
-    if (l==value) return Long.toString(l);
-    String res=BigDecimal.valueOf(value).toEngineeringString();
-    if (res.endsWith(".0")) return res.substring(0, res.length()-2);
-    else if (res.contains("E")) {
-      res=Double.toString(value);
-      res=res.replace("E-", "e-").replace("E", "e+");
+    JsonNumber(double value){
+        this.value = value;
     }
-    return res;
-  }
 
-  @Override
-  public JsonType getType() {
-    return JsonType.NUMBER;
-  }
-
-  @Override
-  public boolean isNumber() {
-    return true;
-  }
-
-  @Override
-  public int asInt() {
-    return (int)value;
-  }
-
-  @Override
-  public long asLong() {
-    return (long)value;
-  }
-
-  @Override
-  public float asFloat() {
-    return (float)value;
-  }
-
-  @Override
-  public double asDouble() {
-    return value;
-  }
-
-  @Override
-  public int hashCode() {
-    return Double.valueOf(value).hashCode();
-  }
-
-  @Override
-  public boolean equals(Object object) {
-    if (this==object) {
-      return true;
+    @Override
+    public String toString(){
+        long l = (long)value;
+        if(l == value) return Long.toString(l);
+        String res = BigDecimal.valueOf(value).toEngineeringString();
+        if(res.endsWith(".0")) return res.substring(0, res.length() - 2);
+        else if(res.contains("E")){
+            res = Double.toString(value);
+            res = res.replace("E-", "e-").replace("E", "e+");
+        }
+        return res;
     }
-    if (object==null) {
-      return false;
+
+    @Override
+    public JsonType getType(){
+        return JsonType.NUMBER;
     }
-    if (getClass()!=object.getClass()) {
-      return false;
+
+    @Override
+    public boolean isNumber(){
+        return true;
     }
-    JsonNumber other=(JsonNumber)object;
-    return value==other.value;
-  }
+
+    @Override
+    public int asInt(){
+        return (int)value;
+    }
+
+    @Override
+    public long asLong(){
+        return (long)value;
+    }
+
+    @Override
+    public float asFloat(){
+        return (float)value;
+    }
+
+    @Override
+    public double asDouble(){
+        return value;
+    }
+
+    @Override
+    public int hashCode(){
+        return Double.valueOf(value).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        if(!super.equals(o)) return false;
+        JsonNumber that = (JsonNumber)o;
+        return Double.compare(that.value, value) == 0;
+    }
 }

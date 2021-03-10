@@ -22,31 +22,31 @@
 package org.hjson;
 
 @SuppressWarnings("serial") // use default serial UID
-class JsonDsf extends JsonValue {
+class JsonDsf extends JsonValue{
 
-  private final Object value;
+    private final Object value;
 
-  JsonDsf(Object value) {
-    this.value=value;
-  }
+    JsonDsf(Object value){
+        this.value = value;
+    }
 
-  @Override
-  public String toString() {
-    return "null";
-  }
+    @Override
+    public String toString(){
+        return "null";
+    }
 
-  @Override
-  public JsonType getType() {
-    return JsonType.DSF;
-  }
+    @Override
+    public JsonType getType(){
+        return JsonType.DSF;
+    }
 
-  @Override
-  public Object asDsf() {
-    return value;
-  }
+    @Override
+    public Object asDsf(){
+        return value;
+    }
 
-  @Override
-  public int hashCode() {
-    return value.hashCode();
-  }
+    @Override
+    public int hashCode(){
+        return value.hashCode();
+    }
 }

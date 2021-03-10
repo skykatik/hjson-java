@@ -22,128 +22,133 @@
  ******************************************************************************/
 package org.hjson;
 
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 
+class JsonWriter{
 
-class JsonWriter {
+    boolean format;
 
-  boolean format;
-
-  public JsonWriter(boolean format) {
-    this.format=format;
-  }
-
-  void nl(Writer tw, int level) throws IOException {
-    if (format) {
-      tw.write(JsonValue.eol);
-      for (int i=0; i<level; i++) tw.write("  ");
+    public JsonWriter(boolean format){
+        this.format = format;
     }
-  }
 
-  public void save(JsonValue value, Writer tw, int level) throws IOException {
-    boolean following=false;
-    switch (value.getType()) {
-      case OBJECT:
-        JsonObject obj=value.asObject();
-        if (obj.size()>0) nl(tw, level);
-        tw.write('{');
-        for (JsonObject.Member pair : obj) {
-          if (following) tw.write(",");
-          nl(tw, level+1);
-          tw.write('\"');
-          tw.write(escapeString(pair.getName()));
-          tw.write("\":");
-          //save(, tw, level+1, " ", false);
-          JsonValue v=pair.getValue();
-          JsonType vType=v.getType();
-          if (format && vType!=JsonType.ARRAY && vType!=JsonType.OBJECT) tw.write(" ");
-          if (v==null) tw.write("null");
-          else save(v, tw, level+1);
-          following=true;
+    static String escapeName(String name){
+        boolean needsEscape = name.length() == 0;
+        for(char ch : name.toCharArray()){
+            if(HjsonParser.isWhiteSpace(ch) || ch == '{' || ch == '}' || ch == '[' || ch == ']' || ch == ',' || ch == ':'){
+                needsEscape = true;
+                break;
+            }
         }
-        if (following) nl(tw, level);
-        tw.write('}');
-        break;
-      case ARRAY:
-        JsonArray arr=value.asArray();
-        int n=arr.size();
-        if (n>0) nl(tw, level);
-        tw.write('[');
-        for (int i=0; i<n; i++) {
-          if (following) tw.write(",");
-          JsonValue v=arr.get(i);
-          JsonType vType=v.getType();
-          if (vType!=JsonType.ARRAY && vType!=JsonType.OBJECT) nl(tw, level+1);
-          save(v, tw, level+1);
-          following=true;
+        return needsEscape ? "\"" + JsonWriter.escapeString(name) + "\"" : name;
+    }
+
+    static String escapeString(String src){
+        if(src == null) return null;
+
+        for(int i = 0; i < src.length(); i++){
+            if(getEscapedChar(src.charAt(i)) != null){
+                StringBuilder sb = new StringBuilder();
+                if(i > 0) sb.append(src, 0, i);
+                return doEscapeString(sb, src, i);
+            }
         }
-        if (following) nl(tw, level);
-        tw.write(']');
-        break;
-      case BOOLEAN:
-        tw.write(value.isTrue()?"true":"false");
-        break;
-      case STRING:
-        tw.write('"');
-        tw.write(escapeString(value.asString()));
-        tw.write('"');
-        break;
-      default:
-        tw.write(value.toString());
-        break;
+        return src;
     }
-  }
 
-  static String escapeName(String name) {
-    boolean needsEscape=name.length()==0;
-    for(char ch : name.toCharArray()) {
-      if (HjsonParser.isWhiteSpace(ch) || ch=='{' || ch=='}' || ch=='[' || ch==']' || ch==',' || ch==':') {
-        needsEscape=true;
-        break;
-      }
+    private static String doEscapeString(StringBuilder sb, String src, int cur){
+        int start = cur;
+        for(int i = cur; i < src.length(); i++){
+            String escaped = getEscapedChar(src.charAt(i));
+            if(escaped != null){
+                sb.append(src, start, i);
+                sb.append(escaped);
+                start = i + 1;
+            }
+        }
+        sb.append(src, start, src.length());
+        return sb.toString();
     }
-    if (needsEscape) return "\""+JsonWriter.escapeString(name)+"\"";
-    else return name;
-  }
 
-  static String escapeString(String src) {
-    if (src==null) return null;
-
-    for (int i=0; i<src.length(); i++) {
-      if (getEscapedChar(src.charAt(i))!=null) {
-        StringBuilder sb=new StringBuilder();
-        if (i>0) sb.append(src, 0, i);
-        return doEscapeString(sb, src, i);
-      }
+    private static String getEscapedChar(char c){
+        switch(c){
+            case '\"':
+                return "\\\"";
+            case '\t':
+                return "\\t";
+            case '\n':
+                return "\\n";
+            case '\r':
+                return "\\r";
+            case '\f':
+                return "\\f";
+            case '\b':
+                return "\\b";
+            case '\\':
+                return "\\\\";
+            default:
+                return null;
+        }
     }
-    return src;
-  }
 
-  private static String doEscapeString(StringBuilder sb, String src, int cur) {
-    int start=cur;
-    for (int i=cur; i<src.length(); i++) {
-      String escaped=getEscapedChar(src.charAt(i));
-      if (escaped!=null) {
-        sb.append(src, start, i);
-        sb.append(escaped);
-        start=i+1;
-      }
+    void nl(Writer tw, int level) throws IOException{
+        if(format){
+            tw.write(JsonValue.eol);
+            for(int i = 0; i < level; i++) tw.write("  ");
+        }
     }
-    sb.append(src, start, src.length());
-    return sb.toString();
-  }
 
-  private static String getEscapedChar(char c) {
-    switch (c) {
-      case '\"': return "\\\"";
-      case '\t': return "\\t";
-      case '\n': return "\\n";
-      case '\r': return "\\r";
-      case '\f': return "\\f";
-      case '\b': return "\\b";
-      case '\\': return "\\\\";
-      default: return null;
+    public void save(JsonValue value, Writer tw, int level) throws IOException{
+        boolean following = false;
+        switch(value.getType()){
+            case OBJECT:
+                JsonObject obj = value.asObject();
+                if(obj.size() > 0) nl(tw, level);
+                tw.write('{');
+                for(JsonObject.Member pair : obj){
+                    if(following) tw.write(",");
+                    nl(tw, level + 1);
+                    tw.write('\"');
+                    tw.write(escapeString(pair.getName()));
+                    tw.write("\":");
+                    //save(, tw, level+1, " ", false);
+                    JsonValue v = pair.getValue();
+                    JsonType vType = v.getType();
+                    if(format && vType != JsonType.ARRAY && vType != JsonType.OBJECT) tw.write(" ");
+                    if(v == null) tw.write("null");
+                    else save(v, tw, level + 1);
+                    following = true;
+                }
+                if(following) nl(tw, level);
+                tw.write('}');
+                break;
+            case ARRAY:
+                JsonArray arr = value.asArray();
+                int n = arr.size();
+                if(n > 0) nl(tw, level);
+                tw.write('[');
+                for(int i = 0; i < n; i++){
+                    if(following) tw.write(",");
+                    JsonValue v = arr.get(i);
+                    JsonType vType = v.getType();
+                    if(vType != JsonType.ARRAY && vType != JsonType.OBJECT) nl(tw, level + 1);
+                    save(v, tw, level + 1);
+                    following = true;
+                }
+                if(following) nl(tw, level);
+                tw.write(']');
+                break;
+            case BOOLEAN:
+                tw.write(value.isTrue() ? "true" : "false");
+                break;
+            case STRING:
+                tw.write('"');
+                tw.write(escapeString(value.asString()));
+                tw.write('"');
+                break;
+            default:
+                tw.write(value.toString());
+                break;
+        }
     }
-  }
 }

@@ -25,34 +25,33 @@ package org.hjson;
  * Defines the known json types.
  * There is no null type as the primitive will be null instead of the JsonValue containing null.
  */
-public enum JsonType
-{
-  /**
-   * Json value of type string.
-   */
-  STRING,
-  /**
-   * Json value of type number.
-   */
-  NUMBER,
-  /**
-   * Json value of type object.
-   */
-  OBJECT,
-  /**
-   * Json value of type array.
-   */
-  ARRAY,
-  /**
-   * Json value of type boolean.
-   */
-  BOOLEAN,
-  /**
-   * Json value of type null.
-   */
-  NULL,
-  /**
-   * Json value of type DSF.
-   */
-  DSF,
+public enum JsonType{
+    /**
+     * Json value of type string.
+     */
+    STRING,
+    /**
+     * Json value of type number.
+     */
+    NUMBER,
+    /**
+     * Json value of type object.
+     */
+    OBJECT,
+    /**
+     * Json value of type array.
+     */
+    ARRAY,
+    /**
+     * Json value of type boolean.
+     */
+    BOOLEAN,
+    /**
+     * Json value of type null.
+     */
+    NULL,
+    /**
+     * Json value of type DSF.
+     */
+    DSF,
 }

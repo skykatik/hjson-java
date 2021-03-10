@@ -24,32 +24,34 @@ package org.hjson;
 /**
  * A interface to support Domain Specific Formats for Hjson.
  */
-public interface IHjsonDsfProvider
-{
-  /**
-   * Gets the name of this DSF.
-   *
-   * @return name
-   */
-  public String getName();
-  /**
-   * Gets the description of this DSF.
-   *
-   * @return description
-   */
-  public String getDescription();
-  /**
-   * Tries to parse the text as a DSF value.
-   *
-   * @param text the DSF value
-   * @return JsonValue
-   */
-  public JsonValue parse(String text);
-  /**
-   * Stringifies DSF values.
-   *
-   * @param value the JSON value
-   * @return string
-   */
-  public String stringify(JsonValue value);
+public interface IHjsonDsfProvider{
+    /**
+     * Gets the name of this DSF.
+     *
+     * @return name
+     */
+    String getName();
+
+    /**
+     * Gets the description of this DSF.
+     *
+     * @return description
+     */
+    String getDescription();
+
+    /**
+     * Tries to parse the text as a DSF value.
+     *
+     * @param text the DSF value
+     * @return JsonValue
+     */
+    JsonValue parse(String text);
+
+    /**
+     * Stringifies DSF values.
+     *
+     * @param value the JSON value
+     * @return string
+     */
+    String stringify(JsonValue value);
 }

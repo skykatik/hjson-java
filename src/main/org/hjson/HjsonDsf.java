@@ -21,146 +21,150 @@
  ******************************************************************************/
 package org.hjson;
 
-import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Provides standard DSF providers.
  */
-public class HjsonDsf
-{
-  private HjsonDsf() {}
+public class HjsonDsf{
 
-  /**
-   * Returns a math DSF provider
-   * @return DSF provider
-   */
-  public static IHjsonDsfProvider math() { return new DsfMath(); }
-  /**
-   * Returns a hex DSF provider
-   *
-   * @param stringify true to output all integers as hex values
-   * @return DSF provider
-   */
-  public static IHjsonDsfProvider hex(boolean stringify) { return new DsfHex(stringify); }
-  //  /**
-  //   * Returns a date DSF provider.
-  //   * @return DSF provider
-  //   */
-  //  public static IHjsonDsfProvider date() { return new DsfDate(); }
+    private HjsonDsf(){}
 
-  static boolean isInvalidDsfChar(char c)
-  {
-    return c == '{' || c == '}' || c == '[' || c == ']' || c == ',';
-  }
-
-  static JsonValue parse(IHjsonDsfProvider[] dsfProviders, String value)
-  {
-    for (int i=0, n=dsfProviders.length; i<n; i++) {
-      IHjsonDsfProvider dsf=dsfProviders[i];
-      try {
-        JsonValue res=dsf.parse(value);
-        if (res!=null) return res;
-      } catch (Exception exception)
-      {
-        throw new RuntimeException("DSF-"+dsf.getName()+" failed; "+exception.getMessage());
-      }
+    /**
+     * Returns a math DSF provider
+     *
+     * @return DSF provider
+     */
+    public static IHjsonDsfProvider math(){
+        return new DsfMath();
     }
-    return new JsonString(value);
-  }
 
-  static String stringify(IHjsonDsfProvider[] dsfProviders, JsonValue value)
-  {
-    for (int i=0, n=dsfProviders.length; i<n; i++) {
-      IHjsonDsfProvider dsf=dsfProviders[i];
-      try {
-        String text=dsf.stringify(value);
-        if (text!=null) {
-          boolean isInvalid=false;
-          char[] textc=text.toCharArray();
-          for(char ch : textc) {
-            if (isInvalidDsfChar(ch)) { isInvalid=true; break; }
-          }
-          if (isInvalid || text.length()==0 || textc[0]=='"')
-            throw new Exception("value may not be empty, start with a quote or contain a punctuator character except colon: " + text);
-          return text;
+    /**
+     * Returns a hex DSF provider
+     *
+     * @param stringify true to output all integers as hex values
+     * @return DSF provider
+     */
+    public static IHjsonDsfProvider hex(boolean stringify){
+        return new DsfHex(stringify);
+    }
+    //  /**
+    //   * Returns a date DSF provider.
+    //   * @return DSF provider
+    //   */
+    //  public static IHjsonDsfProvider date() { return new DsfDate(); }
+
+    static boolean isInvalidDsfChar(char c){
+        return c == '{' || c == '}' || c == '[' || c == ']' || c == ',';
+    }
+
+    static JsonValue parse(IHjsonDsfProvider[] dsfProviders, String value){
+        for(int i = 0, n = dsfProviders.length; i < n; i++){
+            IHjsonDsfProvider dsf = dsfProviders[i];
+            try{
+                JsonValue res = dsf.parse(value);
+                if(res != null) return res;
+            }catch(Exception exception){
+                throw new RuntimeException("DSF-" + dsf.getName() + " failed; " + exception.getMessage());
+            }
         }
-      }
-      catch (Exception exception)
-      {
-        throw new RuntimeException("DSF-"+dsf.getName()+" failed; "+exception.getMessage());
-      }
+        return new JsonString(value);
     }
-    return null;
-  }
 
-}
-
-class DsfMath implements IHjsonDsfProvider
-{
-  public String getName() { return "math"; }
-  public String getDescription() { return "support for Inf/inf, -Inf/-inf, Nan/naN and -0"; }
-
-  public JsonValue parse(String text)
-  {
-    switch (text)
-    {
-      case "+inf":
-      case "inf":
-      case "+Inf":
-      case "Inf":
-        return new JsonNumber(Double.POSITIVE_INFINITY);
-      case "-inf":
-      case "-Inf":
-        return new JsonNumber(Double.NEGATIVE_INFINITY);
-      case "nan":
-      case "NaN":
-        return new JsonNumber(Double.NaN);
-      default:
+    static String stringify(IHjsonDsfProvider[] dsfProviders, JsonValue value){
+        for(int i = 0, n = dsfProviders.length; i < n; i++){
+            IHjsonDsfProvider dsf = dsfProviders[i];
+            try{
+                String text = dsf.stringify(value);
+                if(text != null){
+                    boolean isInvalid = false;
+                    char[] textc = text.toCharArray();
+                    for(char ch : textc){
+                        if(isInvalidDsfChar(ch)){
+                            isInvalid = true;
+                            break;
+                        }
+                    }
+                    if(isInvalid || text.length() == 0 || textc[0] == '"')
+                        throw new Exception("value may not be empty, start with a quote or contain a punctuator character except colon: " + text);
+                    return text;
+                }
+            }catch(Exception exception){
+                throw new RuntimeException("DSF-" + dsf.getName() + " failed; " + exception.getMessage());
+            }
+        }
         return null;
     }
-  }
 
-  public String stringify(JsonValue value)
-  {
-    if (!value.isNumber()) return null;
-    double val=value.asDouble();
-    if (val==Double.POSITIVE_INFINITY) return "Inf";
-    else if (val==Double.NEGATIVE_INFINITY) return "-Inf";
-    else if (Double.isNaN(val)) return "NaN";
-    else if (val==0.0 && 1/val==Double.NEGATIVE_INFINITY) return "-0";
-    else return null;
-  }
 }
 
-class DsfHex implements IHjsonDsfProvider
-{
-  boolean stringify;
-  static Pattern isHex=Pattern.compile("^0x[0-9A-Fa-f]+$");
+class DsfMath implements IHjsonDsfProvider{
 
-  public DsfHex(boolean stringify) { this.stringify=stringify; }
-
-  public String getName() { return "hex"; }
-  public String getDescription() { return "parse hexadecimal numbers prefixed with 0x"; }
-
-  public JsonValue parse(String text)
-  {
-    if (isHex.matcher(text).find())
-      return new JsonNumber(Long.parseLong(text.substring(2), 16));
-    else
-      return null;
-  }
-
-  public String stringify(JsonValue value)
-  {
-    if (stringify && value.isNumber() && value.asLong()==value.asDouble())
-    {
-      return "0x"+Long.toHexString(value.asLong());
+    public String getName(){
+        return "math";
     }
-    else
-    {
-      return null;
+
+    public String getDescription(){
+        return "support for Inf/inf, -Inf/-inf, Nan/naN and -0";
     }
-  }
+
+    public JsonValue parse(String text){
+        switch(text){
+            case "+inf":
+            case "inf":
+            case "+Inf":
+            case "Inf":
+                return new JsonNumber(Double.POSITIVE_INFINITY);
+            case "-inf":
+            case "-Inf":
+                return new JsonNumber(Double.NEGATIVE_INFINITY);
+            case "nan":
+            case "NaN":
+                return new JsonNumber(Double.NaN);
+            default:
+                return null;
+        }
+    }
+
+    public String stringify(JsonValue value){
+        if(!value.isNumber()) return null;
+        double val = value.asDouble();
+        if(val == Double.POSITIVE_INFINITY) return "Inf";
+        else if(val == Double.NEGATIVE_INFINITY) return "-Inf";
+        else if(Double.isNaN(val)) return "NaN";
+        else if(val == 0.0 && 1 / val == Double.NEGATIVE_INFINITY) return "-0";
+        else return null;
+    }
+}
+
+class DsfHex implements IHjsonDsfProvider{
+    static Pattern isHex = Pattern.compile("^0x[0-9A-Fa-f]+$");
+    boolean stringify;
+
+    public DsfHex(boolean stringify){
+        this.stringify = stringify;
+    }
+
+    public String getName(){
+        return "hex";
+    }
+
+    public String getDescription(){
+        return "parse hexadecimal numbers prefixed with 0x";
+    }
+
+    public JsonValue parse(String text){
+        if(isHex.matcher(text).find())
+            return new JsonNumber(Long.parseLong(text.substring(2), 16));
+        else
+            return null;
+    }
+
+    public String stringify(JsonValue value){
+        if(stringify && value.isNumber() && value.asLong() == value.asDouble()){
+            return "0x" + Long.toHexString(value.asLong());
+        }else{
+            return null;
+        }
+    }
 }

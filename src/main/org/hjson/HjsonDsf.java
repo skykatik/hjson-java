@@ -63,7 +63,9 @@ public class HjsonDsf{
             IHjsonDsfProvider dsf = dsfProviders[i];
             try{
                 JsonValue res = dsf.parse(value);
-                if(res != null) return res;
+                if(res != null){
+                    return res;
+                }
             }catch(Exception exception){
                 throw new RuntimeException("DSF-" + dsf.getName() + " failed; " + exception.getMessage());
             }
@@ -85,8 +87,9 @@ public class HjsonDsf{
                             break;
                         }
                     }
-                    if(isInvalid || text.length() == 0 || textc[0] == '"')
+                    if(isInvalid || text.length() == 0 || textc[0] == '"'){
                         throw new Exception("value may not be empty, start with a quote or contain a punctuator character except colon: " + text);
+                    }
                     return text;
                 }
             }catch(Exception exception){
@@ -127,13 +130,21 @@ class DsfMath implements IHjsonDsfProvider{
     }
 
     public String stringify(JsonValue value){
-        if(!value.isNumber()) return null;
+        if(!value.isNumber()){
+            return null;
+        }
         double val = value.asDouble();
-        if(val == Double.POSITIVE_INFINITY) return "Inf";
-        else if(val == Double.NEGATIVE_INFINITY) return "-Inf";
-        else if(Double.isNaN(val)) return "NaN";
-        else if(val == 0.0 && 1 / val == Double.NEGATIVE_INFINITY) return "-0";
-        else return null;
+        if(val == Double.POSITIVE_INFINITY){
+            return "Inf";
+        }else if(val == Double.NEGATIVE_INFINITY){
+            return "-Inf";
+        }else if(Double.isNaN(val)){
+            return "NaN";
+        }else if(val == 0.0 && 1 / val == Double.NEGATIVE_INFINITY){
+            return "-0";
+        }else{
+            return null;
+        }
     }
 }
 
@@ -154,10 +165,11 @@ class DsfHex implements IHjsonDsfProvider{
     }
 
     public JsonValue parse(String text){
-        if(isHex.matcher(text).find())
+        if(isHex.matcher(text).find()){
             return new JsonNumber(Long.parseLong(text.substring(2), 16));
-        else
+        }else{
             return null;
+        }
     }
 
     public String stringify(JsonValue value){

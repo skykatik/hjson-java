@@ -44,12 +44,16 @@ class JsonWriter{
     }
 
     static String escapeString(String src){
-        if(src == null) return null;
+        if(src == null){
+            return null;
+        }
 
         for(int i = 0; i < src.length(); i++){
             if(getEscapedChar(src.charAt(i)) != null){
                 StringBuilder sb = new StringBuilder();
-                if(i > 0) sb.append(src, 0, i);
+                if(i > 0){
+                    sb.append(src, 0, i);
+                }
                 return doEscapeString(sb, src, i);
             }
         }
@@ -94,7 +98,9 @@ class JsonWriter{
     void nl(Writer tw, int level) throws IOException{
         if(format){
             tw.write(JsonValue.eol);
-            for(int i = 0; i < level; i++) tw.write("  ");
+            for(int i = 0; i < level; i++){
+                tw.write("  ");
+            }
         }
     }
 
@@ -103,10 +109,14 @@ class JsonWriter{
         switch(value.getType()){
             case OBJECT:
                 JsonObject obj = value.asObject();
-                if(obj.size() > 0) nl(tw, level);
+                if(obj.size() > 0){
+                    nl(tw, level);
+                }
                 tw.write('{');
                 for(JsonObject.Member pair : obj){
-                    if(following) tw.write(",");
+                    if(following){
+                        tw.write(",");
+                    }
                     nl(tw, level + 1);
                     tw.write('\"');
                     tw.write(escapeString(pair.getName()));
@@ -114,28 +124,43 @@ class JsonWriter{
                     //save(, tw, level+1, " ", false);
                     JsonValue v = pair.getValue();
                     JsonType vType = v.getType();
-                    if(format && vType != JsonType.ARRAY && vType != JsonType.OBJECT) tw.write(" ");
-                    if(v == null) tw.write("null");
-                    else save(v, tw, level + 1);
+                    if(format && vType != JsonType.ARRAY && vType != JsonType.OBJECT){
+                        tw.write(" ");
+                    }
+                    if(v == null){
+                        tw.write("null");
+                    }else{
+                        save(v, tw, level + 1);
+                    }
                     following = true;
                 }
-                if(following) nl(tw, level);
+                if(following){
+                    nl(tw, level);
+                }
                 tw.write('}');
                 break;
             case ARRAY:
                 JsonArray arr = value.asArray();
                 int n = arr.size();
-                if(n > 0) nl(tw, level);
+                if(n > 0){
+                    nl(tw, level);
+                }
                 tw.write('[');
                 for(int i = 0; i < n; i++){
-                    if(following) tw.write(",");
+                    if(following){
+                        tw.write(",");
+                    }
                     JsonValue v = arr.get(i);
                     JsonType vType = v.getType();
-                    if(vType != JsonType.ARRAY && vType != JsonType.OBJECT) nl(tw, level + 1);
+                    if(vType != JsonType.ARRAY && vType != JsonType.OBJECT){
+                        nl(tw, level + 1);
+                    }
                     save(v, tw, level + 1);
                     following = true;
                 }
-                if(following) nl(tw, level);
+                if(following){
+                    nl(tw, level);
+                }
                 tw.write(']');
                 break;
             case BOOLEAN:

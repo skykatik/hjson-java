@@ -30,27 +30,32 @@ class HjsonWriter{
     private final IHjsonDsfProvider[] dsfProviders;
 
     public HjsonWriter(HjsonOptions options){
-        if(options != null){
-            dsfProviders = options.getDsfProviders();
-        }else{
-            dsfProviders = new IHjsonDsfProvider[0];
-        }
+        dsfProviders = options != null ? options.getDsfProviders() : new IHjsonDsfProvider[0];
     }
 
     static String escapeName(String name){
-        if(name.length() == 0 || needsEscapeName.matcher(name).find())
+        if(name.length() == 0 || needsEscapeName.matcher(name).find()){
             return "\"" + JsonWriter.escapeString(name) + "\"";
-        else
+        }else{
             return name;
+        }
     }
 
     static boolean startsWithKeyword(String text){
         int p;
-        if(text.startsWith("true") || text.startsWith("null")) p = 4;
-        else if(text.startsWith("false")) p = 5;
-        else return false;
-        while(p < text.length() && HjsonParser.isWhiteSpace(text.charAt(p))) p++;
-        if(p == text.length()) return true;
+        if(text.startsWith("true") || text.startsWith("null")){
+            p = 4;
+        }else if(text.startsWith("false")){
+            p = 5;
+        }else{
+            return false;
+        }
+        while(p < text.length() && HjsonParser.isWhiteSpace(text.charAt(p))){
+            p++;
+        }
+        if(p == text.length()){
+            return true;
+        }
         char ch = text.charAt(p);
         return ch == ',' || ch == '}' || ch == ']' || ch == '#' || ch == '/' &&
                 (text.length() > p + 1 && (text.charAt(p + 1) == '/' || text.charAt(p + 1) == '*'));
@@ -92,7 +97,9 @@ class HjsonWriter{
 
     void nl(Writer tw, int level) throws IOException{
         tw.write(JsonValue.eol);
-        for(int i = 0; i < level; i++) tw.write("  ");
+        for(int i = 0; i < level; i++){
+            tw.write("  ");
+        }
     }
 
     public void save(JsonValue value, Writer tw, int level, String separator, boolean noIndent) throws IOException{
@@ -114,8 +121,11 @@ class HjsonWriter{
             case OBJECT:
                 JsonObject obj = value.asObject();
                 if(!noIndent){
-                    if(obj.size() > 0) nl(tw, level);
-                    else tw.write(separator);
+                    if(obj.size() > 0){
+                        nl(tw, level);
+                    }else{
+                        tw.write(separator);
+                    }
                 }
                 tw.write('{');
 
@@ -126,22 +136,29 @@ class HjsonWriter{
                     save(pair.getValue(), tw, level + 1, " ", false);
                 }
 
-                if(obj.size() > 0) nl(tw, level);
+                if(obj.size() > 0){
+                    nl(tw, level);
+                }
                 tw.write('}');
                 break;
             case ARRAY:
                 JsonArray arr = value.asArray();
                 int n = arr.size();
                 if(!noIndent){
-                    if(n > 0) nl(tw, level);
-                    else tw.write(separator);
+                    if(n > 0){
+                        nl(tw, level);
+                    }else{
+                        tw.write(separator);
+                    }
                 }
                 tw.write('[');
                 for(int i = 0; i < n; i++){
                     nl(tw, level + 1);
                     save(arr.get(i), tw, level + 1, "", true);
                 }
-                if(n > 0) nl(tw, level);
+                if(n > 0){
+                    nl(tw, level);
+                }
                 tw.write(']');
                 break;
             case BOOLEAN:
@@ -207,11 +224,18 @@ class HjsonWriter{
                 if(needsEscapeML(ch)){
                     noEscapeML = false;
                     break;
-                }else if(!HjsonParser.isWhiteSpace(ch)) allWhite = false;
+                }else if(!HjsonParser.isWhiteSpace(ch)){
+                    allWhite = false;
+                }
             }
-            if(noEscapeML && !allWhite && !value.contains("'''")) writeMLString(value, tw, level, separator);
-            else tw.write(separator + "\"" + JsonWriter.escapeString(value) + "\"");
-        }else tw.write(separator + value);
+            if(noEscapeML && !allWhite && !value.contains("'''")){
+                writeMLString(value, tw, level, separator);
+            }else{
+                tw.write(separator + "\"" + JsonWriter.escapeString(value) + "\"");
+            }
+        }else{
+            tw.write(separator + value);
+        }
     }
 
     void writeMLString(String value, Writer tw, int level, String separator) throws IOException{

@@ -69,7 +69,9 @@ class JsonParser{
         skipWhiteSpace();
         JsonValue result = readValue();
         skipWhiteSpace();
-        if(!isEndOfText()) throw error("Unexpected character");
+        if(!isEndOfText()){
+            throw error("Unexpected character");
+        }
         return result;
     }
 

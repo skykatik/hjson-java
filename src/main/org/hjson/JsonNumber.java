@@ -36,10 +36,13 @@ class JsonNumber extends JsonValue{
     @Override
     public String toString(){
         long l = (long)value;
-        if(l == value) return Long.toString(l);
+        if(l == value){
+            return Long.toString(l);
+        }
         String res = BigDecimal.valueOf(value).toEngineeringString();
-        if(res.endsWith(".0")) return res.substring(0, res.length() - 2);
-        else if(res.contains("E")){
+        if(res.endsWith(".0")){
+            return res.substring(0, res.length() - 2);
+        }else if(res.contains("E")){
             res = Double.toString(value);
             res = res.replace("E-", "e-").replace("E", "e+");
         }
@@ -78,9 +81,15 @@ class JsonNumber extends JsonValue{
 
     @Override
     public boolean equals(Object o){
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
-        if(!super.equals(o)) return false;
+        if(this == o){
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()){
+            return false;
+        }
+        if(!super.equals(o)){
+            return false;
+        }
         JsonNumber that = (JsonNumber)o;
         return Double.compare(that.value, value) == 0;
     }

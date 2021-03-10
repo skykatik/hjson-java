@@ -85,7 +85,9 @@ public abstract class JsonValue implements Serializable{
      *
      * @return the eol value
      */
-    public static String getEol(){ return eol; }
+    public static String getEol(){
+        return eol;
+    }
 
     /**
      * Sets the newline charater(s).
@@ -93,7 +95,9 @@ public abstract class JsonValue implements Serializable{
      * @param value the eol value
      */
     public static void setEol(String value){
-        if(value.equals("\r\n") || value.equals("\n")) eol = value;
+        if(value.equals("\r\n") || value.equals("\n")){
+            eol = value;
+        }
     }
 
     /**
@@ -523,7 +527,9 @@ public abstract class JsonValue implements Serializable{
      * @throws IOException if an I/O error occurs in the writer
      */
     public void writeTo(Writer writer, HjsonOptions options) throws IOException{
-        if(options == null) throw new NullPointerException("options is null");
+        if(options == null){
+            throw new NullPointerException("options is null");
+        }
         WritingBuffer buffer = new WritingBuffer(writer, 128);
         new HjsonWriter(options).save(this, buffer, 0, "", true);
         buffer.flush();

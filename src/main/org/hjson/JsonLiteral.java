@@ -84,9 +84,15 @@ class JsonLiteral extends JsonValue{
 
     @Override
     public boolean equals(Object o){
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
-        if(!super.equals(o)) return false;
+        if(this == o){
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()){
+            return false;
+        }
+        if(!super.equals(o)){
+            return false;
+        }
         JsonLiteral that = (JsonLiteral)o;
         return value == that.value;
     }

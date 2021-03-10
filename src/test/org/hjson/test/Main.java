@@ -12,7 +12,9 @@ public class Main {
     try {
       Reader reader=new BufferedReader(new InputStreamReader(is, "UTF-8"));
       int n;
-      while ((n=reader.read(buffer))!=-1) writer.write(buffer, 0, n);
+      while ((n=reader.read(buffer))!=-1){
+          writer.write(buffer, 0, n);
+      }
     } finally {
       is.close();
     }
@@ -21,7 +23,9 @@ public class Main {
 
   private static String load(String file, boolean cr) throws Exception {
     InputStream res=Main.class.getResourceAsStream("/"+file);
-    if (res==null) throw new Exception(file+" not found!");
+    if (res==null){
+        throw new Exception(file+" not found!");
+    }
     String text=convertStreamToString(res);
     String std=text.replace("\r", ""); // make sure we have unix style text regardless of the input
     return cr ? std.replace("\n", "\r\n") : std;
@@ -46,18 +50,28 @@ public class Main {
         JsonValue result=JsonValue.readJSON(load(name+"_result.json", inputCr));
         String data2=result.toString(Stringify.FORMATTED);
         String hjson2=load(name+"_result.hjson", outputCr);
-        if (!data1.equals(data2)) return failErr(name, "parse", data1, data2);
-        if (!hjson1.equals(hjson2)) return failErr(name, "stringify", hjson1, hjson2);
+        if (!data1.equals(data2)){
+            return failErr(name, "parse", data1, data2);
+        }
+        if (!hjson1.equals(hjson2)){
+            return failErr(name, "stringify", hjson1, hjson2);
+        }
 
         if (isJson) {
           String json1=data.toString(), json2=JsonValue.readHjson(text, opt).toString();
-          if (!json1.equals(json2)) return failErr(name, "json chk", json1, json2);
+          if (!json1.equals(json2)){
+              return failErr(name, "json chk", json1, json2);
+          }
         }
       }
-      else return failErr(name, "should fail", null, null);
+      else{
+          return failErr(name, "should fail", null, null);
+      }
     }
     catch (Exception e) {
-      if (!shouldFail) return failErr(name, "exception", e.toString(), "");
+      if (!shouldFail){
+          return failErr(name, "exception", e.toString(), "");
+      }
     }
     return true;
   }
@@ -69,13 +83,14 @@ public class Main {
       out.println(s1+"---");
       out.printf("--- expected (%d):\n", s2.length());
       out.println(s2+"---");
-      if (s1.length()==s2.length())
-        for (int i=0; i<s1.length(); i++) {
-          if (s1.charAt(i)!=s2.charAt(i)) {
-            out.printf("Diff at offs %d: %d/%d\n", i, s1.charAt(i), s2.charAt(i));
-            break;
+      if (s1.length()==s2.length()){
+          for (int i=0; i<s1.length(); i++) {
+            if (s1.charAt(i)!=s2.charAt(i)) {
+              out.printf("Diff at offs %d: %d/%d\n", i, s1.charAt(i), s2.charAt(i));
+              break;
+            }
           }
-        }
+      }
     }
     return false;
   }
@@ -88,7 +103,9 @@ public class Main {
     boolean allOK=true;
 
     for (String file : testNames) {
-      if (file.contains("/")) continue; // skip for now
+      if (file.contains("/")){
+          continue; // skip for now
+      }
       int extIdx=file.lastIndexOf('.');
       String name=file.substring(0, extIdx);
       name=name.substring(0, name.length()-5);

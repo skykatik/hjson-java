@@ -426,9 +426,15 @@ public class JsonObject extends JsonValue implements Iterable<Member>{
 
     @Override
     public boolean equals(Object o){
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
-        if(!super.equals(o)) return false;
+        if(this == o){
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()){
+            return false;
+        }
+        if(!super.equals(o)){
+            return false;
+        }
         JsonObject members = (JsonObject)o;
         return map.equals(members.map);
     }
@@ -470,8 +476,12 @@ public class JsonObject extends JsonValue implements Iterable<Member>{
 
         @Override
         public boolean equals(Object o){
-            if(this == o) return true;
-            if(o == null || getClass() != o.getClass()) return false;
+            if(this == o){
+                return true;
+            }
+            if(o == null || getClass() != o.getClass()){
+                return false;
+            }
             Member member = (Member)o;
             return name.equals(member.name) && value.equals(member.value);
         }

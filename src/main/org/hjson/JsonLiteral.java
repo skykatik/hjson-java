@@ -93,7 +93,7 @@ class JsonLiteral extends JsonValue{
 
     @Override
     public int hashCode(){
-        return Objects.hash(value);
+        return value.hashCode();
     }
 
     enum Iv{

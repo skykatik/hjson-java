@@ -22,16 +22,15 @@
  ******************************************************************************/
 package org.hjson;
 
+import java.util.Objects;
+
 @SuppressWarnings("serial") // use default serial UID
 class JsonString extends JsonValue{
 
     private final String string;
 
     JsonString(String string){
-        if(string == null){
-            throw new NullPointerException("string is null");
-        }
-        this.string = string;
+        this.string = Objects.requireNonNull(string, "string");
     }
 
     @Override
@@ -50,22 +49,16 @@ class JsonString extends JsonValue{
     }
 
     @Override
-    public int hashCode(){
-        return string.hashCode();
+    public boolean equals(Object o){
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        if(!super.equals(o)) return false;
+        JsonString that = (JsonString)o;
+        return string.equals(that.string);
     }
 
     @Override
-    public boolean equals(Object object){
-        if(this == object){
-            return true;
-        }
-        if(object == null){
-            return false;
-        }
-        if(getClass() != object.getClass()){
-            return false;
-        }
-        JsonString other = (JsonString)object;
-        return string.equals(other.string);
+    public int hashCode(){
+        return string.hashCode();
     }
 }

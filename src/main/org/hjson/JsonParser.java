@@ -50,8 +50,7 @@ class JsonParser{
      */
 
     JsonParser(String string){
-        this(new StringReader(string),
-                Math.max(MIN_BUFFER_SIZE, Math.min(DEFAULT_BUFFER_SIZE, string.length())));
+        this(new StringReader(string), Math.max(MIN_BUFFER_SIZE, Math.min(DEFAULT_BUFFER_SIZE, string.length())));
     }
 
     JsonParser(Reader reader){
@@ -271,8 +270,7 @@ class JsonParser{
         if(!readDigit()){
             throw expected("digit");
         }
-        while(readDigit()){
-        }
+        while(readDigit()){}
         return true;
     }
 
@@ -286,8 +284,7 @@ class JsonParser{
         if(!readDigit()){
             throw expected("digit");
         }
-        while(readDigit()){
-        }
+        while(readDigit()){}
         return true;
     }
 

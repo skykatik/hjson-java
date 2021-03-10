@@ -70,26 +70,4 @@ public class HjsonOptions{
         legacyRoot = value;
     }
 
-    /**
-     * Detects whether root braces should be emitted.
-     *
-     * @return <code>true</code> if this feature is enabled.
-     * @deprecated will always return true.
-     */
-    @Deprecated
-    public boolean getEmitRootBraces(){
-        return true;
-    }
-
-    /**
-     * Sets whether root braces should be emitted.
-     *
-     * @param value value
-     * @deprecated root braces are always emitted.
-     */
-    @Deprecated
-    public void setEmitRootBraces(boolean value){
-
-    }
-
 }

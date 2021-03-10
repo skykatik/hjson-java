@@ -77,16 +77,16 @@ class JsonNumber extends JsonValue{
     }
 
     @Override
-    public int hashCode(){
-        return Double.valueOf(value).hashCode();
-    }
-
-    @Override
     public boolean equals(Object o){
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
         if(!super.equals(o)) return false;
         JsonNumber that = (JsonNumber)o;
         return Double.compare(that.value, value) == 0;
+    }
+
+    @Override
+    public int hashCode(){
+        return Double.valueOf(value).hashCode();
     }
 }

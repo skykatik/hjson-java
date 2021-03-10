@@ -178,7 +178,9 @@ class HjsonParser{
                         reset();
                         read();
                         skipWhiteSpace();
-                        try{ return checkTrailing(readValue()); }catch(Exception exception2){ }
+                        try{
+                            return checkTrailing(readValue());
+                        }catch(Exception ignored){}
                         throw exception; // throw original error
                     }
             }
@@ -231,12 +233,13 @@ class HjsonParser{
                     case 'n':
                     case 't':
                         String svalue = value.toString().trim();
-                        if(svalue.equals("false")){
-                            return JsonValue.FALSE;
-                        }else if(svalue.equals("null")){
-                            return JsonValue.NULL;
-                        }else if(svalue.equals("true")){
-                            return JsonValue.TRUE;
+                        switch(svalue){
+                            case "false":
+                                return JsonValue.FALSE;
+                            case "null":
+                                return JsonValue.NULL;
+                            case "true":
+                                return JsonValue.TRUE;
                         }
                         break;
                     default:

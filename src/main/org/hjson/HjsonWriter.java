@@ -27,11 +27,6 @@ import java.util.regex.Pattern;
 class HjsonWriter{
 
     static Pattern needsEscapeName = Pattern.compile("[,\\{\\[\\}\\]\\s:#\"']|//|/\\*");
-    private final IHjsonDsfProvider[] dsfProviders;
-
-    public HjsonWriter(HjsonOptions options){
-        dsfProviders = options != null ? options.getDsfProviders() : new IHjsonDsfProvider[0];
-    }
 
     static String escapeName(String name){
         if(name.length() == 0 || needsEscapeName.matcher(name).find()){
@@ -106,14 +101,6 @@ class HjsonWriter{
         if(value == null){
             tw.write(separator);
             tw.write("null");
-            return;
-        }
-
-        // check for DSF
-        String dsfValue = HjsonDsf.stringify(dsfProviders, value);
-        if(dsfValue != null){
-            tw.write(separator);
-            tw.write(dsfValue);
             return;
         }
 

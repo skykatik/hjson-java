@@ -39,22 +39,14 @@ class HjsonParser{
     private boolean capture;
     private final boolean legacyRoot;
 
-    private final IHjsonDsfProvider[] dsfProviders;
-
-    HjsonParser(String string, HjsonOptions options){
+    HjsonParser(String string){
         buffer = string;
         reset();
-        if(options != null){
-            dsfProviders = options.getDsfProviders();
-            legacyRoot = options.getParseLegacyRoot();
-        }else{
-            dsfProviders = new IHjsonDsfProvider[0];
-            legacyRoot = true;
-        }
+        legacyRoot = true;
     }
 
-    HjsonParser(Reader reader, HjsonOptions options) throws IOException{
-        this(readToEnd(reader), options);
+    HjsonParser(Reader reader) throws IOException{
+        this(readToEnd(reader));
     }
 
     static String readToEnd(Reader reader) throws IOException{
@@ -220,7 +212,7 @@ class HjsonParser{
             throw error("Found a punctuator character '" + (char)first + "' when expecting a quoteless string (check your syntax)");
         }
         value.append((char)current);
-        for(; ; ){
+        while(true){
             read();
             boolean isEol = current < 0 || current == '\r' || current == '\n';
             if(isEol || current == ',' ||
@@ -252,7 +244,7 @@ class HjsonParser{
                 }
                 if(isEol){
                     // remove any whitespace at the end (ignored in quoteless strings)
-                    return HjsonDsf.parse(dsfProviders, value.toString().trim());
+                    return JsonValue.valueOf(value.toString().trim());
                 }
             }
             value.append((char)current);

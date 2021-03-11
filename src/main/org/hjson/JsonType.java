@@ -49,9 +49,5 @@ public enum JsonType{
     /**
      * Json value of type null.
      */
-    NULL,
-    /**
-     * Json value of type DSF.
-     */
-    DSF,
+    NULL
 }

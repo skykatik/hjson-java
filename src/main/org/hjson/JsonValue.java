@@ -60,19 +60,19 @@ import java.io.*;
 public abstract class JsonValue implements Serializable{
 
     /**
-     * Represents the JSON literal <code>true</code>.
+     * Represents the JSON boolean <code>true</code>.
      */
-    public static final JsonValue TRUE = JsonLiteral.TRUE;
+    public static final JsonValue TRUE = JsonBoolean.TRUE;
 
     /**
-     * Represents the JSON literal <code>false</code>.
+     * Represents the JSON boolean <code>false</code>.
      */
-    public static final JsonValue FALSE = JsonLiteral.FALSE;
+    public static final JsonValue FALSE = JsonBoolean.FALSE;
 
     /**
-     * Represents the JSON literal <code>null</code>.
+     * Represents the JSON <code>null</code>.
      */
-    public static final JsonValue NULL = JsonLiteral.NULL;
+    public static final JsonValue NULL = JsonNull.instance;
 
     static String eol = System.getProperty("line.separator");
 
@@ -418,17 +418,6 @@ public abstract class JsonValue implements Serializable{
      */
     public boolean asBoolean(){
         throw new UnsupportedOperationException("Not a boolean: " + toString());
-    }
-
-    /**
-     * Returns this JSON value as a DSF object, assuming that this value represents a DSF. If this
-     * is not the case, an exception is thrown.
-     *
-     * @return the object represented by this value
-     * @throws UnsupportedOperationException if this value is not a DSF
-     */
-    public Object asDsf(){
-        throw new UnsupportedOperationException("Not a DSF");
     }
 
     /**

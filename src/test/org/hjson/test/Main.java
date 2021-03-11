@@ -76,7 +76,7 @@ public class Main{
 
     static boolean failErr(String name, String type, String s1, String s2){
         out.println(name + " " + type + " FAILED!");
-        if(s1 != null || s2 != null){
+        if(s1 != null && s2 != null){
             out.printf("--- actual (%d):\n", s1.length());
             out.println(s1 + "---");
             out.printf("--- expected (%d):\n", s2.length());
@@ -84,7 +84,7 @@ public class Main{
             if(s1.length() == s2.length()){
                 for(int i = 0; i < s1.length(); i++){
                     if(s1.charAt(i) != s2.charAt(i)){
-                        out.printf("Diff at offs %d: %d/%d\n", i, s1.charAt(i), s2.charAt(i));
+                        out.printf("Diff at offs %d: %c/%c\n", i, s1.charAt(i), s2.charAt(i));
                         break;
                     }
                 }
@@ -107,7 +107,6 @@ public class Main{
             int extIdx = file.lastIndexOf('.');
             String name = file.substring(0, extIdx);
             name = name.substring(0, name.length() - 5);
-            //if (filter!=null && !name.Contains(filter)) continue;
 
             if(test(name, file, false, false)
                     && test(name, file, true, false)
@@ -119,8 +118,8 @@ public class Main{
 
         if(!allOK){
             out.println("FAILED!");
-            System.exit(1);
-        }else{ out.println("ALL OK!"); }
-
+        }else{
+            out.println("ALL OK!");
+        }
     }
 }

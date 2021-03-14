@@ -35,7 +35,6 @@ public class JsonBoolean extends JsonValue{
     public boolean equals(Object o){
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
-        if(!super.equals(o)) return false;
         JsonBoolean that = (JsonBoolean)o;
         return value == that.value;
     }
